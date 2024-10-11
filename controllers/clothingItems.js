@@ -11,7 +11,7 @@ const createItem = (req, res) => {
 
   ClothingItem.create({ name, weather, imageUrl, owner: userId })
     .then((item) => {
-      res.status(200).send({ data: item });
+      res.send({ data: item });
     })
     .catch((err) => {
       console.error(err);
@@ -25,14 +25,10 @@ const createItem = (req, res) => {
 
 const getItems = (req, res) => {
   ClothingItem.find({})
-    .then((item) => res.status(200).send(item))
+    .then((item) => res.send(item))
     .catch((err) => {
       console.error(err);
-      if (err.name === "DocumentNotFoundError") {
-        res.status(INVALID_ENDPOINT).send({ message: err.message });
-      } else {
-        res.status(SERVER_ERROR).send({ message: err.message });
-      }
+      res.status(SERVER_ERROR).send({ message: err.message });
     });
 };
 
@@ -41,15 +37,17 @@ const deleteItem = (req, res) => {
 
   ClothingItem.findByIdAndDelete(itemId)
     .orFail()
-    .then(() => res.status(200).send({}))
+    .then((item) => res.send(item))
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        res.status(INVALID_ENDPOINT).send({ message: err.message });
+        res.status(INVALID_ENDPOINT).send({ message: "Invalid endpoint" });
       } else if (err.name === "CastError") {
-        res.status(INVALID_DATA).send({ message: err.message });
+        res.status(INVALID_DATA).send({ message: "Invalid data" });
       } else {
-        res.status(SERVER_ERROR).send({ message: err.message });
+        res
+          .status(SERVER_ERROR)
+          .send({ message: "An error has occured on the server" });
       }
     });
 };
@@ -61,7 +59,7 @@ const likeItem = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => res.status(200).send({ item }))
+    .then((item) => res.send({ item }))
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
@@ -81,7 +79,7 @@ const dislikeItem = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => res.status(200).send({ item }))
+    .then((item) => res.send({ item }))
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
