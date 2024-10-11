@@ -12,7 +12,9 @@ const getUsers = (req, res) => {
     .then((users) => res.send(users))
     .catch((err) => {
       console.error(err);
-      res.status(SERVER_ERROR).send({ message: "An error has occured on the server" });
+      res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occured on the server" });
     });
 };
 
@@ -23,7 +25,7 @@ const createUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        res.status(INVALID_DATA).send({ message: err.message });
+        res.status(INVALID_DATA).send({ message: "Invalid data" });
       } else {
         res
           .status(SERVER_ERROR)
@@ -41,9 +43,9 @@ const getUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
-        res.status(INVALID_DATA).send({ message: err.message });
+        res.status(INVALID_DATA).send({ message: "Invalid data" });
       } else if (err.name === "DocumentNotFoundError") {
-        res.status(INVALID_ENDPOINT).send({ message: err.message });
+        res.status(INVALID_ENDPOINT).send({ message: "Invalid endpoint" });
       } else {
         res
           .status(SERVER_ERROR)
