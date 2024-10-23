@@ -12,13 +12,6 @@ mongoose
   })
   .catch(console.error);
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: "670727efe418644a3c9f27c2", // paste the _id of the test user created in the previous step
-  };
-  next();
-});
-
 app.use(express.json());
 app.use("/", mainRouter);
 

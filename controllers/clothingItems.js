@@ -1,9 +1,5 @@
 const ClothingItem = require("../models/clothingItems");
-const {
-  INVALID_DATA,
-  INVALID_ENDPOINT,
-  SERVER_ERROR,
-} = require("../utils/errors");
+const { handleError } = require("../utils/errors");
 
 const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
@@ -15,13 +11,7 @@ const createItem = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      if (err.name === "ValidationError") {
-        res.status(INVALID_DATA).send({ message: "Invalid data" });
-      } else {
-        res
-          .status(SERVER_ERROR)
-          .send({ message: "An error has occured on the server" });
-      }
+      handleError(err, res);
     });
 };
 
@@ -30,9 +20,7 @@ const getItems = (req, res) => {
     .then((item) => res.send(item))
     .catch((err) => {
       console.error(err);
-      res
-        .status(SERVER_ERROR)
-        .send({ message: "An error has occured on the server" });
+      handleError(err, res);
     });
 };
 
@@ -44,15 +32,7 @@ const deleteItem = (req, res) => {
     .then((item) => res.send(item))
     .catch((err) => {
       console.error(err);
-      if (err.name === "DocumentNotFoundError") {
-        res.status(INVALID_ENDPOINT).send({ message: "Invalid endpoint" });
-      } else if (err.name === "CastError") {
-        res.status(INVALID_DATA).send({ message: "Invalid data" });
-      } else {
-        res
-          .status(SERVER_ERROR)
-          .send({ message: "An error has occured on the server" });
-      }
+      handleError(err, res);
     });
 };
 
@@ -63,18 +43,10 @@ const likeItem = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => res.send({ item }))
+    .then((item) => res.send({ data: item }))
     .catch((err) => {
       console.error(err);
-      if (err.name === "DocumentNotFoundError") {
-        res.status(INVALID_ENDPOINT).send({ message: "Invalid endpoint" });
-      } else if (err.name === "CastError") {
-        res.status(INVALID_DATA).send({ message: "Invalid data" });
-      } else {
-        res
-          .status(SERVER_ERROR)
-          .send({ message: "An error has occured on the server" });
-      }
+      handleError(err, res);
     });
 };
 
@@ -88,15 +60,7 @@ const dislikeItem = (req, res) => {
     .then((item) => res.send({ item }))
     .catch((err) => {
       console.error(err);
-      if (err.name === "DocumentNotFoundError") {
-        res.status(INVALID_ENDPOINT).send({ message: "Invalid endpoint" });
-      } else if (err.name === "CastError") {
-        res.status(INVALID_DATA).send({ message: "Invalid data" });
-      } else {
-        res
-          .status(SERVER_ERROR)
-          .send({ message: "An error has occured on the server" });
-      }
+      handleError(err, res);
     });
 };
 
