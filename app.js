@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const mainRouter = require("./routes/index");
+const { createUser, loginUser } = require("./controllers/users");
+const { handleInvalidEndpoint } = require("./utils/errors");
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -14,6 +16,12 @@ mongoose
 
 app.use(express.json());
 app.use("/", mainRouter);
+app.post("/signin", loginUser);
+app.post("/signup", createUser);
+
+app.use((req, res) => {
+  handleInvalidEndpoint(res);
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

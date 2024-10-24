@@ -4,10 +4,12 @@ const { INCORRECT_LOGIN_ERROR } = require("../utils/errors");
 const { createItem, getItems, deleteItem, likeItem, dislikeItem } = require("../controllers/clothingItems");
 
 router.get("/", getItems);
-router.post("/", handleAuth, createItem);
-router.put("/:itemId/likes", handleAuth, likeItem);
-router.delete("/:itemId/likes", handleAuth, dislikeItem);
-router.delete("/:itemId", handleAuth, deleteItem);
+
+router.use(handleAuth);
+router.post("/", createItem);
+router.put("/:itemId/likes", likeItem);
+router.delete("/:itemId/likes", dislikeItem);
+router.delete("/:itemId", deleteItem);
 
 router.use((req, res) => {
   res.status(INCORRECT_LOGIN_ERROR).send({

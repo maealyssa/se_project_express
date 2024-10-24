@@ -6,15 +6,13 @@ const handleAuthError = (res) => {
   res.status(INCORRECT_LOGIN_ERROR).send({ message: "Authorization Error" });
 };
 
-const extractBearerToken = (header) => {
-  return header.replace("Bearer ", "");
-};
+const extractBearerToken = (header) => header.replace("Bearer ", "");
 
 const handleAuth = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith("Bearer ")) {
-    return handleAuthError(res);
+    handleAuthError(res);
   }
 
   const token = extractBearerToken(authorization);
@@ -22,13 +20,14 @@ const handleAuth = (req, res, next) => {
 
   try {
     payload = jwt.verify(token, JWT_SECRET);
+    console.log(payload);
   } catch (err) {
-    return handleAuthError(res);
+    handleAuthError(res);
   }
 
   req.user = payload; // adding the payload to the Request object
 
-  next(); // passing the request further along
+  return next(); // passing the request further along
 };
 
 module.exports = { handleAuth };

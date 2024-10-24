@@ -38,7 +38,7 @@ const createUser = (req, res) => {
           .then(() => res.send({ name, avatar, email }))
           .catch((err) => {
             console.error(err)
-            handleError(err, res)
+            handleLoginErr(res);
         })
       });
     })
@@ -49,7 +49,7 @@ const createUser = (req, res) => {
 };
 
 const getCurrentUser = (req, res) => {
-  const { userId } = req.params;
+  const userId = req.user._id;
 
   User.findById(userId)
     .orFail()

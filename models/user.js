@@ -23,11 +23,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please enter a valid email"],
     validate: {
-      validator(value) {
-        return validator.isEmail(value);
-      },
+      validator: (value) => validator.isEmail(value),
       message: "You must enter a valid email address",
-    },
+      },
   },
   password: {
     type: String,
@@ -46,7 +44,14 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(
       if (!user) {
         return Promise.reject(new Error("Incorrect email or password"));
       }
-      return bcrypt.compare(password, user.password);
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if(matched) {
+            return user;
+          } else {
+            return Promise.reject(new Error("Incorrect email or password"));
+          }
+        })
     });
 };
 

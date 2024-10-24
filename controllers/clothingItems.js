@@ -1,11 +1,11 @@
 const ClothingItem = require("../models/clothingItems");
-const { handleError } = require("../utils/errors");
+const { handleError, handleForbiddenErr } = require("../utils/errors");
 
 const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
   const userId = req.user._id;
-
-  ClothingItem.create({ name, weather, imageUrl, owner: userId })
+  console.log(req.user._id);
+  ClothingItem.create({ name, weather, imageUrl, owner: userId, })
     .then((item) => {
       res.send({ data: item });
     })
@@ -27,11 +27,16 @@ const getItems = (req, res) => {
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
 
-  ClothingItem.findByIdAndDelete(itemId)
+  ClothingItem.findById(itemId)
     .orFail()
-    .then((item) => res.send(item))
+    .then((item) => {
+      if (item.owner.equals(req.user._id)) {
+        return item.remove(() => res.send({ clothingItem: item }));
+      }
+      handleForbiddenErr(res);
+    })
     .catch((err) => {
-      console.error(err);
+      console.log(err);
       handleError(err, res);
     });
 };
