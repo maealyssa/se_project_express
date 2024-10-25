@@ -5,6 +5,7 @@ const { JWT_SECRET } = require("../utils/config");
 const {
   handleError,
   handleLoginErr,
+  handleEmailErr
 } = require("../utils/errors");
 
 // GET /users
@@ -23,30 +24,33 @@ const createUser = (req, res) => {
 
   User.findOne({ email })
     .then((user) => {
-      if (user) {
-        const error = new Error("This email is already registered");
-        error.statusCode = 409;
-        throw error;
+      console.log(user)
+      if(user) {
+        return handleEmailErr(res);
       }
-      return bcrypt.hash(password, 10).then((hash) => {
-        User.create({
-          name,
-          avatar,
-          email,
-          password: hash,
+      return bcrypt.hash(password, 10)
+        .then((hash) => {
+          User.create({
+            name,
+            avatar,
+            email,
+            password: hash,
+          })
+            .then(() => res.send({ name, avatar, email }))
+            .catch((err) => {
+              console.error(err)
+              handleLoginErr(res)
+            })
         })
-          .then(() => res.send({ name, avatar, email }))
-          .catch((err) => {
-            console.error(err)
-            handleLoginErr(res);
-        })
-      });
-    })
     .catch((err) => {
-      console.error(err);
-      handleError(err, res);
-    });
+      console.error(err)
+      handleError(res);
+    })
+    })
+
+
 };
+
 
 const getCurrentUser = (req, res) => {
   const userId = req.user._id;

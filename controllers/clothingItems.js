@@ -33,7 +33,7 @@ const deleteItem = (req, res) => {
       if (item.owner.equals(req.user._id)) {
         return item.remove(() => res.send({ clothingItem: item }));
       }
-      handleForbiddenErr(res);
+      return handleForbiddenErr(res);
     })
     .catch((err) => {
       console.log(err);
