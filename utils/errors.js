@@ -9,7 +9,7 @@ const error = {
 
 const handleErrRes = (res, errorCode, message) => {
   res.status(errorCode).send({ message: message });
-}
+};
 
 const handleError = (err, res) => {
   if (
@@ -48,7 +48,7 @@ const handleError = (err, res) => {
 
 const handleForbiddenErr = (res) => {
   handleErrRes(res, error.FORBIDDEN, "Forbidden");
-}
+};
 
 const handleEmailErr = (res) => {
   handleErrRes(res, error.DUPLICATE_ERROR, "This email is already registered");
@@ -68,5 +68,5 @@ module.exports = {
   handleEmailErr,
   handleLoginErr,
   handleInvalidEndpoint,
-  handleForbiddenErr
+  handleForbiddenErr,
 };

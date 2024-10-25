@@ -5,7 +5,7 @@ const { JWT_SECRET } = require("../utils/config");
 const {
   handleError,
   handleLoginErr,
-  handleEmailErr
+  handleEmailErr,
 } = require("../utils/errors");
 
 // GET /users
@@ -22,35 +22,32 @@ const getUsers = (req, res) => {
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
-  User.findOne({ email })
-    .then((user) => {
-      console.log(user)
-      if(user) {
-        return handleEmailErr(res);
-      }
-      return bcrypt.hash(password, 10)
-        .then((hash) => {
-          User.create({
-            name,
-            avatar,
-            email,
-            password: hash,
-          })
-            .then(() => res.send({ name, avatar, email }))
-            .catch((err) => {
-              console.error(err)
-              handleLoginErr(res)
-            })
+  User.findOne({ email }).then((user) => {
+    console.log(user);
+    if (user) {
+      return handleEmailErr(res);
+    }
+    return bcrypt
+      .hash(password, 10)
+      .then((hash) => {
+        User.create({
+          name,
+          avatar,
+          email,
+          password: hash,
         })
-    .catch((err) => {
-      console.error(err)
-      handleError(res);
-    })
-    })
-
-
+          .then(() => res.send({ name, avatar, email }))
+          .catch((err) => {
+            console.error(err);
+            handleLoginErr(res);
+          });
+      })
+      .catch((err) => {
+        console.error(err);
+        handleError(res);
+      });
+  });
 };
-
 
 const getCurrentUser = (req, res) => {
   const userId = req.user._id;

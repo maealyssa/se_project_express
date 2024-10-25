@@ -1,7 +1,13 @@
 const router = require("express").Router();
 const { handleAuth } = require("../middlewares/auth");
 const { INCORRECT_LOGIN_ERROR } = require("../utils/errors");
-const { createItem, getItems, deleteItem, likeItem, dislikeItem } = require("../controllers/clothingItems");
+const {
+  createItem,
+  getItems,
+  deleteItem,
+  likeItem,
+  dislikeItem,
+} = require("../controllers/clothingItems");
 
 router.get("/", getItems);
 
