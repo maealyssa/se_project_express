@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const mainRouter = require("./routes/index");
+const cors = require("cors");
 const { createUser, loginUser } = require("./controllers/users");
 const { handleInvalidEndpoint } = require("./utils/errors");
 
@@ -14,6 +15,7 @@ mongoose
   })
   .catch(console.error);
 
+app.use(cors());
 app.use(express.json());
 app.use("/", mainRouter);
 app.post("/signin", loginUser);
