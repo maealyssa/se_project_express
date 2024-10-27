@@ -6,18 +6,8 @@ const {
   handleError,
   handleLoginErr,
   handleEmailErr,
+  handleIncorrectLoginErr,
 } = require("../utils/errors");
-
-// GET /users
-
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => res.send(users))
-    .catch((err) => {
-      console.error(err);
-      handleError(err, res);
-    });
-};
 
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
@@ -64,6 +54,10 @@ const getCurrentUser = (req, res) => {
 const loginUser = (req, res) => {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    return handleLoginErr(res);
+  }
+
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, `${JWT_SECRET}`, {
@@ -73,7 +67,7 @@ const loginUser = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      handleLoginErr(res);
+      handleIncorrectLoginErr(res);
     });
 };
 
@@ -90,7 +84,6 @@ const updateUser = (req, res) => {
 };
 
 module.exports = {
-  getUsers,
   createUser,
   getCurrentUser,
   loginUser,

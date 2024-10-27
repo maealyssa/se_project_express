@@ -50,12 +50,16 @@ const handleForbiddenErr = (res) => {
   handleErrRes(res, error.FORBIDDEN, "Forbidden");
 };
 
+const handleIncorrectLoginErr = (res) => {
+  handleErrRes(res, error.INCORRECT_LOGIN_ERROR, "Incorrect email or password");
+};
+
 const handleEmailErr = (res) => {
   handleErrRes(res, error.DUPLICATE_ERROR, "This email is already registered");
 };
 
 const handleLoginErr = (res) => {
-  handleErrRes(res, error.INVALID_DATA, "Incorrect email or password");
+  handleErrRes(res, error.INVALID_DATA, "Please enter valid data");
 };
 
 const handleInvalidEndpoint = (res) => {
@@ -69,4 +73,5 @@ module.exports = {
   handleLoginErr,
   handleInvalidEndpoint,
   handleForbiddenErr,
+  handleIncorrectLoginErr,
 };
