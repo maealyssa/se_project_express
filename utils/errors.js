@@ -18,25 +18,14 @@ const handleError = (err, res) => {
     err.name === "CastError"
   ) {
     handleErrRes(res, error.INVALID_DATA, "Please enter valid data");
-  } else if (
-    err.statusCode === 401 ||
-    err.message === "Incorrect email or password"
-  ) {
+  } else if (err.message === "Incorrect email or password") {
     handleErrRes(
       res,
       error.INCORRECT_LOGIN_ERROR,
       "Incorrect email or password"
     );
-  } else if (err.statusCode === 403 || err.name === "Forbidden") {
-    handleErrRes(res, error.FORBIDDEN, "Forbidden");
-  } else if (err.statusCode === 404 || err.name === "DocumentNotFoundError") {
+  } else if (err.name === "DocumentNotFoundError") {
     handleErrRes(res, error.INVALID_ENDPOINT, "Resource not found");
-  } else if (err.statusCode === 409) {
-    handleErrRes(
-      res,
-      error.DUPLICATE_ERROR,
-      "This email is already registered"
-    );
   } else {
     handleErrRes(
       res,
