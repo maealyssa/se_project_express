@@ -11,7 +11,7 @@ const {
 
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
-
+  console.log(req.body)
   User.findOne({ email }).then((user) => {
     console.log(user);
     if (user) {
@@ -31,10 +31,10 @@ const createUser = (req, res) => {
             console.error(err);
             handleLoginErr(res);
           });
-      })
+       })
       .catch((err) => {
         console.error(err);
-        handleError(res);
+        // handleError(res);
       });
   });
 };

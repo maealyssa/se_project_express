@@ -12,12 +12,12 @@ mongoose
   .then(() => console.log("Connected to DB"))
   .catch(console.error);
 
+app.use(express.json());
 app.use(cors());
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-app.use(express.json());
 app.use("/", mainRouter);
 
 app.use((req, res) => {
